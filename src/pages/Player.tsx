@@ -3,24 +3,27 @@ import { Header } from '../components/Header';
 import { VideoPlayer } from '../components/VideoPlayer';
 import { Module } from '../components/Module';
 import { useAppDispatch, useAppSelector } from '../store';
-import {  loadCourse, useCurrentLesson } from '../store/slices/player';
+import { loadCourse, useCurrentLesson } from '../store/slices/player';
 import { useEffect } from 'react';
+import { Skeleton } from '../components/Skeleton';
 
 export function Player() {
-  const dispatch = useAppDispatch()
+  const dispatch = useAppDispatch();
   const modules = useAppSelector((state) => state.player.course?.modules);
 
-  const {currentLesson} = useCurrentLesson()
-
-    useEffect(() => {
-      dispatch(loadCourse())
-    }, [])
+  const { currentLesson } = useCurrentLesson();
 
   useEffect(() => {
-    if(currentLesson){
-    document.title = `${currentLesson.title}`
+    dispatch(loadCourse());
+  }, []);
+
+  useEffect(() => {
+    if (currentLesson) {
+      document.title = `${currentLesson.title}`;
     }
-  }, [currentLesson])
+  }, [currentLesson]);
+
+  const isCourseLoading = useAppSelector((state) => state.player.isLoading);
 
   return (
     <div className="h-screen bg-zinc-950 text-zinc-50 flex justify-center items-center">
@@ -36,18 +39,23 @@ export function Player() {
           <div className="flex-1">
             <VideoPlayer />
           </div>
-          <aside className="w-80 absolute top-0 bottom-0 right-0 border-l border-x-zinc-800 divide-y-2 divide-zinc-900 bg-zinc-900 overflow-y-scroll scrollbar scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
-            {modules && modules.map((module, index) => {
-              return (
-                <Module
-                  key={module.id}
-                  moduleIndex={index}
-                  title={module.title}
-                  amountOfLesson={module.lessons.length}
-                />
-              );
-            })}
-          </aside>
+          {isCourseLoading ? (
+            <Skeleton />
+          ) : (
+            <aside className="w-80 absolute top-0 bottom-0 right-0 border-l border-x-zinc-800 divide-y-2 divide-zinc-900 bg-zinc-900 overflow-y-scroll scrollbar scrollbar-thin scrollbar-track-zinc-950 scrollbar-thumb-zinc-800">
+              {modules &&
+                modules.map((module, index) => {
+                  return (
+                    <Module
+                      key={module.id}
+                      moduleIndex={index}
+                      title={module.title}
+                      amountOfLesson={module.lessons.length}
+                    />
+                  );
+                })}
+            </aside>
+          )}
         </main>
       </div>
     </div>
