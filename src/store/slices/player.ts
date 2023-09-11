@@ -26,18 +26,13 @@ const initialState: PlayerState = {
   course: null,
   currentModuleIndex: 0,
   currentLessonIndex: 0,
-  isLoading: true
+  isLoading: true,
 };
 
-
-
-export const loadCourse = createAsyncThunk(
-  'player/load',
-  async () => {
-   const response = await api.get('/courses/1')
-   return response.data   
-  }
-)
+export const loadCourse = createAsyncThunk('player/load', async () => {
+  const response = await api.get('/courses/1');
+  return response.data;
+});
 
 const playerSlice = createSlice({
   name: 'player',
@@ -68,14 +63,14 @@ const playerSlice = createSlice({
     },
   },
   extraReducers(builder) {
-    builder.addCase(loadCourse.pending, (state, action) => {
-      state.isLoading = true
-    })
+    builder.addCase(loadCourse.pending, (state) => {
+      state.isLoading = true;
+    });
 
     builder.addCase(loadCourse.fulfilled, (state, action) => {
-      state.course = action.payload
-      state.isLoading = false
-    })
+      state.course = action.payload;
+      state.isLoading = false;
+    });
   },
 });
 
