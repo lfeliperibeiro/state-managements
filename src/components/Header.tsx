@@ -1,17 +1,20 @@
-import { useAppSelector } from "../store";
-import { useCurrentLesson } from "../store/slices/player";
+// import { useAppSelector } from "../store";
+import { useStore } from "../zustand-store";
+// import { useCurrentLesson } from "../store/slices/player";
+import { useCurrentLesson } from "../zustand-store";
+
 
 export function Header() {
+  const isLoading = useStore(store => store.isLoading)
+  // const {currentModule, currentLesson} =  useCurrentLesson()
   const {currentModule, currentLesson} =  useCurrentLesson()
 
-
-
-const isCourseLoading = useAppSelector((state) => state.player.isLoading);
+// const isCourseLoading = useAppSelector((state) => state.player.isLoading);
 
 
   return (
     <div className="flex flex-col gap-1">
-      {isCourseLoading ? (
+      {isLoading ? (
         <div className="shadow rounded-md p-4 max-w-sm w-full mx-auto">
         <div className="animate-pulse flex space-x-4">
           <div className="flex-1 space-y-6 py-1">
